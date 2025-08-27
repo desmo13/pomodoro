@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [timer, setTimer] = useState({ time:{ seconds: 20, minutes: 0, hours: 0 } });
+  const [timer, setTimer] = useState({ time:{ seconds: 0, minutes: 25, hours: 0 } });
   const [started, setStarted] = useState(false);
   const [numberPomodoro, setNumberPomodoro] = useState({
     pomodoro25Min: 0,
