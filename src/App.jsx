@@ -1,66 +1,97 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import './App.css'
 
-function App() {
-  const [timer, setTimer] = useState({ time:{ seconds: 0, minutes: 25, hours: 0 } });
-  const [started, setStarted] = useState(false);
-  const [numberPomodoro, setNumberPomodoro] = useState({
-    pomodoro25Min: 0,
-    pomodoro5Min: 0,
-    pomodoro15Min: 0,
-  });
-  const [actualPomodoro, setActualPomodoro] = useState('25min');
-  useEffect(() => {
-        console.log(actualPomodoro)
-        console.log(numberPomodoro)
-        console.log(timer)
-        if(!started) return;
-    const interval = setInterval(() => {
-      if(timer.time.seconds === 0 && timer.time.minutes === 0){
-        setActualPomodoro(prevPomodoro => {
-          if(prevPomodoro === '25min'){
-            setStarted(false);
-            setTimer({ time: { seconds: 0, minutes: 5, hours: 0 } });
-            return '5min';
-          }
-          if(prevPomodoro === '5min'){
-            setStarted(false);
-            setTimer({ time: { seconds: 0, minutes: 15, hours: 0 } });
-            return '15min';
-          }
-          setStarted(false);
-          setTimer({ time: { seconds: 0, minutes: 25, hours: 0 } });
-          return '25min';
-        });
+const getNextMode = (state) => {
+  if (state.mode === '25min') {
+    return '5min'
+  } else if (state.mode === '5min' && state.count25 < 4) {
+    return '25min'
+  } else if (state.mode === '15min') {
+    return '25min'
+  }else if (state.mode === '5min' && state.count25 > 3) {
+    return '15min'
+  }
+}
+
+const getNextSeconds = (state) => {
+  if (state.mode === '25min' && state.count25 < 4) {
+    return 25 * 60
+  } else if (state.mode === '5min') {
+    return 5 * 60
+  } else if (state.mode === '15min') {
+    return 15 * 60
+  }else if (state.mode === '25min' && state.count25 === 4) {
+    return 15 * 60
+  }
+}
+const getNextCount25 = (state) => {
+  if (state.mode === '25min' && state.count25 < 4) {
+    return state.count25 + 1
+  } else if (state.mode === '5min') {
+    return state.count25
+  } else if (state.mode === '15min') {
+    return 0
+  } else if (state.mode === '25min' && state.count25 === 4) {
+    return 0
+  }
+
+}
+function reducer(state, action) {
+  switch (action.type) {
+    case 'TICK':
+      if (state.secondsLeft > 0) {
+        return { ...state, secondsLeft: state.secondsLeft - 1 }
       }
-      console.log(actualPomodoro)
-      setTimer(prevTimer => {
-        if(prevTimer.time.seconds <1){
-          return { time: { seconds: 59, minutes: prevTimer.time.minutes - 1, hours: prevTimer.time.hours } }
-        }
-          return { time: { seconds: Number(prevTimer.time.seconds) - 1, minutes: prevTimer.time.minutes, hours: prevTimer.time.hours } }
+      break;
+    case 'START':
+      return { ...state, running: true }
 
-       
-      });
+    case 'STOP':
+      return { ...state, running: false }
+    case 'COMPLETE': {
+      const nextMode = getNextMode(state)
+      const nextSeconds = getNextSeconds({ ...state, mode: nextMode })
+      const nextCount25 = getNextCount25(state)
+      return { ...state, mode: nextMode, secondsLeft: nextSeconds, running: false, count25: nextCount25 }
+    }
 
+    
+
+    default:
+      return state
+  }
+}
+function App() {
+  const [state, dispatch] = useReducer(reducer, { secondsLeft: 25*60, running: false, mode: '25min', count25: 0 })
+
+  useEffect(() => {
+    if (!state.running) return
+    console.log(state)
+    const interval = setInterval(() => {
+      if (state.secondsLeft === 0) {
+        dispatch({ type: 'COMPLETE' })
+        return
+      }
+      dispatch({ type: 'TICK' })
       
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [started,numberPomodoro,actualPomodoro,timer]);
+
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [state])
   return (
     <>
       <div className='MainContainer'>
         <div className="container">
           <h2>Timer</h2>
-        
+
           <div className="Timmer">
-            
+
             <div className="Timmer__display">
-               <div className={`spinner ${started ? '' : 'hidden'}`}></div>
-              <span className="Timmer__display--number">{`${timer.time.minutes}:${timer.time.seconds}`}</span>
+              <div className={`spinner ${state.running ? '' : 'hidden'}`}></div>
+              <span className="Timmer__display--number">{`${String(Math.floor(state.secondsLeft / 60)).padStart(2, '0')}:${String(state.secondsLeft % 60).padStart(2, '0')}`}</span>
             </div>
-            <button onClick={() => setStarted(!started)}>
-              {started ? 'Stop' : 'Start'}
+            <button onClick={() => dispatch({ type: state.running ? 'STOP' : 'START' })}>
+              {state.running ? 'Stop' : 'Start'}
             </button>
           </div>
         </div>
