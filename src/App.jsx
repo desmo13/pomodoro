@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react'
 import './App.css'
-
+import { useNotification } from './hooks/useNotification'
 const getNextMode = (state) => {
   if (state.mode === '25min') {
     return '5min'
@@ -63,7 +63,20 @@ function reducer(state, action) {
 }
 function App() {
   const [state, dispatch] = useReducer(reducer, { secondsLeft: 25*60, running: false, mode: '25min', count25: 0 })
-
+  const { supported, permission, canNotify, requestPermission, notify } = useNotification()
+  useEffect(() => {
+    if (!supported) return
+    if (permission === 'default') {
+      requestPermission()
+    }
+    if (permission === 'granted') {
+      notify({
+        title: 'Pomodoro',
+        body: state.mode === '25min' ? 'Time to focus!' : state.mode === '5min' ? 'Take a short break!' : 'Take a long break!',
+        icon: '/icon.png'
+      })
+    }
+  }, [state.mode, permission, supported])
   useEffect(() => {
     if (!state.running) return
     console.log(state)
