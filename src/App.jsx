@@ -1,6 +1,8 @@
 import { useEffect, useReducer } from 'react'
 import './App.css'
 import { useNotification } from './hooks/useNotification'
+import { List } from './Componentes/List/List'
+
 const getNextMode = (state) => {
   if (state.mode === '25min') {
     return '5min'
@@ -70,6 +72,7 @@ function App() {
       requestPermission()
     }
     if (permission === 'granted') {
+      if(!canNotify) return
       notify({
         title: 'Pomodoro',
         body: state.mode === '25min' ? 'Time to focus!' : state.mode === '5min' ? 'Take a short break!' : 'Take a long break!',
@@ -106,7 +109,9 @@ function App() {
             <button onClick={() => dispatch({ type: state.running ? 'STOP' : 'START' })}>
               {state.running ? 'Stop' : 'Start'}
             </button>
+            
           </div>
+          <List data={['Work 25 minutes', 'Short break 5 minutes', 'After 4 pomodoros take a long break of 15 minutes']} />
         </div>
       </div>
     </>
