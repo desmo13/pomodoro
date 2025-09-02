@@ -3,7 +3,7 @@ import { useState } from 'react'
 import './list.css'
 export const List = ({ data }) => {
   const [actualPage, setActualPage] = useState(0)
-  const [pageSize, setPageSize] = useState(1)
+  const [pageSize] = useState(1)
 
   const viewItems = (actualPage, pageSize) => {
     const start = actualPage * pageSize
