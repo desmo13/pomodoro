@@ -1,0 +1,27 @@
+.Form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.Form__input {
+  width: 95%;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+
+}
+.Form__button {
+  margin-left: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: var(--grey-color-600);
+  color: white;
+  transition: all 0.3s ease;
+}
+.Form__button:hover {
+  background-color: var(--grey-color-500);
+
+}

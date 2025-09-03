@@ -1,7 +1,8 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import './App.css'
 import { useNotification } from './hooks/useNotification'
 import { List } from './Componentes/List/List'
+import { Form } from './Componentes/Form/Form'
 
 const getNextMode = (state) => {
   if (state.mode === '25min') {
@@ -65,8 +66,11 @@ function reducer(state, action) {
 }
 function App() {
   const [state, dispatch] = useReducer(reducer, { secondsLeft: 25*60, running: false, mode: '25min', count25: 0 })
+  const [task, setTask] = useState([])
   const { supported, permission, canNotify, requestPermission, notify } = useNotification()
+  console.log(task)
   useEffect(() => {
+    
     if (!supported) return
     if (permission === 'default') {
       requestPermission()
@@ -111,7 +115,8 @@ function App() {
             </button>
             
           </div>
-          <List data={['Work 25 minutes', 'Short break 5 minutes', 'After 4 pomodoros take a long break of 15 minutes']} />
+          <List data={task} />
+          <Form onSubmit={(task) => setTask((prev) => [...prev, task])} />
         </div>
       </div>
     </>

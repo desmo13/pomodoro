@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import './list.css'
-export const List = ({ data }) => {
+export const List = ({ data =[] }) => {
   const [actualPage, setActualPage] = useState(0)
   const [pageSize] = useState(1)
 
