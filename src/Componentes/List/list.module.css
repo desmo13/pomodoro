@@ -1,0 +1,64 @@
+.list_group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+}
+
+.list_group_item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+/* Contenedor de los botones */
+.pagination {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Botón habilitado */
+.enabled {
+  background-color: #1E90FF; /* azul fuerte */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.enabled:hover {
+  background-color: #4682B4; /* azul más oscuro */
+  transform: translateY(-2px); /* efecto de levantar */
+  box-shadow: 0px 6px 10px rgba(0,0,0,0.3);
+}
+
+/* Botón deshabilitado */
+.disabled {
+  background-color: #B0C4DE; /* gris azulado */
+  color: #F8F8FF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}

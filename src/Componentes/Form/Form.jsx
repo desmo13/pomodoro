@@ -8,7 +8,7 @@ export const Form = ({onSubmit}) => {
   return (
     <form onSubmit={handleSubmit} className={styles.Form}>
       {/* <label htmlFor="task">Inserte tareas a hacer </label> */}
-      <input type="text" id="task" name="task" className={styles.Form__input}  placeholder='Inserte tareas a hacer'/>
+      <input type="text" id="task" name="task" className={styles.Form__input }  placeholder='Inserte tareas a hacer'/>
       <button type="submit" className={styles.Form__button}>
         Agregar tarea
         </button>

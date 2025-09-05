@@ -1,9 +1,9 @@
 
 import { useState } from 'react'
-import './list.css'
+import styles from './list.module.css'
 export const List = ({ data =[] }) => {
   const [actualPage, setActualPage] = useState(0)
-  const [pageSize] = useState(1)
+  const [pageSize] = useState(3)
 
   const viewItems = (actualPage, pageSize) => {
     const start = actualPage * pageSize
@@ -14,17 +14,29 @@ export const List = ({ data =[] }) => {
   
   return (
     <>
-      <div className="list-group">
+      <div className={styles.list_group}>
         {viewItems(actualPage, pageSize).map((item, index) => (
-          <div className="list-group-item" key={index}>
+          <div className={styles.list_group_item} key={index}>
             {item}
           </div>
         ))}
       </div>
-      <div className="pagination">
-        <button onClick={() => setActualPage(actualPage !== 0 ? actualPage - 1 : 0)}>Previous</button>
-        <button onClick={() => setActualPage(actualPage !== totalPages - 1 ? actualPage + 1 : totalPages - 1)}>Next</button>
-      </div>
+<div className="pagination">
+  <button
+    onClick={() => setActualPage(actualPage !== 0 ? actualPage - 1 : 0)}
+    className={actualPage === 0 ? styles.disabled : styles.enabled}
+  >
+    Previous
+  </button>
+
+  <button
+    onClick={() => setActualPage(actualPage !== totalPages - 1 ? actualPage + 1 : totalPages - 1)}
+    className={actualPage === totalPages - 1 ? styles.disabled : styles.enabled}
+  >
+    Next
+  </button>
+</div>
+
   </>
   )
 }
